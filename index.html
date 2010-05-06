@@ -4,20 +4,59 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>yql demo</title>
+    <style type="text/css">
+
+        #links {
+            width: 800px;
+            margin: 10px auto;
+            border: 1px solid #cccccc;
+        }
+
+        #links div a {
+            display: block;
+            padding: 5px;
+            border-bottom: 1px solid #cccccc;
+            text-decoration: none;
+        }
+        
+        #links div a:hover {
+            background-color: #e0e0e0;
+            border: 1px dashed #cccccc;
+        }
+
+        .new {
+            overflow: hidden;
+            background-color: #66cc66;
+            height: 0px;
+        }
+
+        .old {
+            overflow: hidden;
+            background-color: #cc6666;
+        }
+
+    </style>
 </head>
 
 <body>
 
-<textarea style="width:100%;">
+<input type="text" id="polling_interval" value="60000" style="display:none;" />
+
+<textarea style="display:none;">
 select * from html where url ="http://news.ycombinator.com" and xpath ="//body//table//table//td//a[starts-with(@href,'http') and not(contains(@href,'ycombinator.com'))]"
 </textarea>
+
+<div id="links"></div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="yql.js"></script>
 <script>
 
     // do this on DOM ready
-    $(yql.reset);
+    $(function(){
+        yql.latency(5000);
+        yql.start();
+    });
 
 </script>
 </body>
