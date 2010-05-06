@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>yql demo</title>
+</head>
+
+<body>
+
+<textarea style="width:100%;">
+select * from html where url ="http://news.ycombinator.com" and xpath ="//body//table//table//td//a[starts-with(@href,'http') and not(contains(@href,'ycombinator.com'))]"
+</textarea>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="yql.js"></script>
+<script>
+
+    // do this on DOM ready
+    $(yql.reset);
+
+</script>
+</body>
+</html>
