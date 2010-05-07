@@ -1,0 +1,8 @@
+This a simply OO JS file to allow polling of YCombinator with YQL,
+though it could be easily adapted to polling any YQL statement/
+Google news page for links (I think it's the same XPath?).
+
+Either way, I only wrote this README to make Github happy, so
+read the code if you want to understand what it does or go to
+
+http://danbeam.org/yqlcombinator
