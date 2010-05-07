@@ -6,32 +6,47 @@
 	<title>yql demo</title>
     <style type="text/css">
 
+        body {
+            background-color: #ff6600;
+        }
+
+        h1 {
+            color: #ffffff; 
+            font-family: arial,verdana,san-serif,helvetica;
+            text-align: center;
+            width: 960px;
+            border: 1px solid #cccccc;
+            border-bottom: none;
+            background-color: #666666;
+            margin: 0 auto;
+        }
+
         #links {
-            width: 800px;
-            margin: 10px auto;
+            width: 960px;
+            margin: auto auto;
             border: 1px solid #cccccc;
         }
 
         #links div a {
+            background-color: #f0f0f0;
             display: block;
             padding: 5px;
             border-bottom: 1px solid #cccccc;
             text-decoration: none;
+            font-family: arial,verdana,san-serif,helvetica;
+            color: #333333;
         }
         
         #links div a:hover {
             background-color: #e0e0e0;
-            border: 1px dashed #cccccc;
         }
 
         .new {
-            overflow: hidden;
             background-color: #66cc66;
             height: 0px;
         }
 
         .old {
-            overflow: hidden;
             background-color: #cc6666;
         }
 
@@ -46,16 +61,25 @@
 select * from html where url ="http://news.ycombinator.com" and xpath ="//body//table//table//td//a[starts-with(@href,'http') and not(contains(@href,'ycombinator.com'))]"
 </textarea>
 
+<h1>Hacker News Refreshed</h1>
+
 <div id="links"></div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="yql.js"></script>
 <script>
 
+    // just for debugging
+    var dummy = {
+        'href'    : 'http://google.com', 
+        'content' : 'Google, duh'
+    };
+
+    $('#links').html('<div><a href="' + dummy.href + '">' + dummy.content + '</a></div>');
+
     // do this on DOM ready
     $(function(){
-        yql.latency(5000);
-        yql.start();
+        yql.latency(120000).start();
     });
 
 </script>

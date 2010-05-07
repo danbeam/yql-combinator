@@ -1,3 +1,9 @@
+/**
+ * @author      Dan Beam <dan@danbeam.org>
+ * @internal    A Simple YQL JSONP helper class that allows you to poll a YQL statement and prettily show results
+ * @copyright   Copyright (C) 2010
+ * Licensed under the MIT and GPL licensed (jQuery license)
+ */
 var yql = (function () {
 
         // check whether to repeat on an interval
@@ -8,7 +14,7 @@ var yql = (function () {
    
         // this is a placeholder for our global JSONP script tag
         jsonp       = null,
-   
+
         // this is an arrangement of stored links we already have
         stored      = {},
 
@@ -73,8 +79,11 @@ var yql = (function () {
          * @internal    Do a JSONP YQL query (inject a <script> tag, pass data to the global callback)
          */
         start = function (cb) {
+
+            // just for debugging
+            stored[dummy.href] = dummy;
+
             insert();
-            timeout = null;
             return call_if_func(cb);
         },
 
@@ -85,7 +94,6 @@ var yql = (function () {
         stop = function (cb) {
             if (null !== timeout) clearTimeout(timeout);
             timeout = null;
-            remove();
             return call_if_func(cb);
         },
 
@@ -97,65 +105,83 @@ var yql = (function () {
             // var pyramid, go!
             var i,
                 cur,
+                len,
+                href,
                 to_add = [],
                 to_del = [],
                 to_add_set,
                 to_del_set,
-                still_here = [],
+                new_items = {},
                 to_add_html = [],
-                to_add_selector = '#links div',
                 to_del_selector = [],
-                len = res.query.count,
+                links_selector = '#links div',
                 results = res.query.results.a;
-   
-            // find out if one of the links is new 
-            for (i = 0; i < len; ++i) {
+
+            // make a href => obj hash
+            for (i = 0, len = res.query.count; i < len; ++i) {
                 cur = results[i];
-                (cur.href in stored ? still_here : to_add).push(cur);
-                stored[cur.href] = cur;
+                new_items[cur.href] = cur;
             }
 
             // look for old links that weren't in the latest pull
-            for (i in stored) {
-                if (!(stored[i] in still_here)) {
-                    to_del.push(stored[i]);
-                    delete stored[i];
+            for (href in new_items) {
+                if (!(href in stored)) {
+                    to_add.push(new_items[href]);
                 }
             }
 
-            console.log({'stored':stored});
-            console.log({'still_here':still_here});
-
             // if there are items to add
             if (to_add.length > 0) {
+
+                // make new HTML
                 for (i = 0, len = to_add.length; i < len; ++i) {
                     to_add_html.push('<div class="new"><a target="_blank" href="' + to_add[i].href + '">' + to_add[i].content.replace(/\n/g,'').replace(/\s+/g,' ') + '</a></div>');
                 }
+
+                // join and append
                 $('#links').append(to_add_html.join("\n"));
-                to_add_set = $(to_add_selector);
+
+                // grab a set from the given selector
+                to_add_set = $(links_selector);
+
+                // animatedly add all the new items
                 to_add_set.each(function (a) {
                     $(this).animate({'height': $(this).children().outerHeight() + 'px'}, 'slow', function(){ $(this).removeClass('new'); });
                 });
             }
 
-            // if there are items to delete 
-            if (to_del.length > 0) {
-                for (i = 0, len = to_del.length; i < len; ++i) {
-                    to_del_selector.push('div contains(a[href="' + to_del[i] + '"])');
+            // see which one we want to delete
+            for (href in stored) {
+                if (!(href in new_items)) {
+                    to_del.push(stored[href]);
                 }
-                console.log({'to_del':to_del});
-                console.log({'to_del_selector':to_del_selector});
-                to_del_selector = $(to_del_selector.join(','));
-                to_del_selector.slideUp(500, function(){ to_del_selector.remove(); });
             }
 
-            console.log({'repeat':!!repeat});
-            console.log({'timeout':timeout});
-            console.log({'latency':latency});
+            // if there are items to delete 
+            if (to_del.length > 0) {
+
+                // create a selector
+                for (i = 0, len = to_del.length; i < len; ++i) {
+                    to_del_selector.push('a[href="' + to_del[i].href + '"]');
+                }
+
+                // join the selectors, animate, and remove from DOM
+                to_del_set = $(links_selector).has(to_del_selector.join(','));
+                to_del_set.addClass('old').slideUp(500, function(){ $(this).remove(); });
+            }
+
+            // set the new stored to our current items
+            stored = null;
+            stored = new_items;
+
+            // don't need the <script> tag anymore
+            remove();
 
             // reset timeout if we're repeating
-            if (!!repeat && null === timeout) timeout = setTimeout(start, latency);
+            if (repeat) timeout = setTimeout(start, latency);
         };
+
+    window.stored = stored;
 
     // publicly accessible methods
     return({
@@ -164,6 +190,6 @@ var yql = (function () {
         'store'   : store,
         'restart' : start,
         'latency' : latency_helper,
-        'latency' : repeat_helper
+        'repeat'  : repeat_helper
     });
 })();
