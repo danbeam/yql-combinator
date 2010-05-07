@@ -79,10 +79,6 @@ var yql = (function () {
          * @internal    Do a JSONP YQL query (inject a <script> tag, pass data to the global callback)
          */
         start = function (cb) {
-
-            // just for debugging
-            stored[dummy.href] = dummy;
-
             insert();
             return call_if_func(cb);
         },

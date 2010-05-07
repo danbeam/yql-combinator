@@ -69,18 +69,8 @@ select * from html where url ="http://news.ycombinator.com" and xpath ="//body//
 <script src="yql.js"></script>
 <script>
 
-    // just for debugging
-    var dummy = {
-        'href'    : 'http://google.com', 
-        'content' : 'Google, duh'
-    };
-
-    $('#links').html('<div><a href="' + dummy.href + '">' + dummy.content + '</a></div>');
-
     // do this on DOM ready
-    $(function(){
-        yql.latency(120000).start();
-    });
+    $(yql.start);
 
 </script>
 </body>
