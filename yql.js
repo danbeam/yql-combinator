@@ -27,7 +27,9 @@ var yql = (function () {
         timeout     = null,
 
         // helper for the many times we use callbacks
-        call_if_func = function (a) { return ('function' === typeof a ? a() : yql); },
+        call_if_func = function (a) {
+            return ('function' === typeof a ? a() : yql);
+        },
 
         /**
         * Try to find a <textarea> with the YQL, otherwise nothing, insert result into YQL v2 URL
@@ -37,7 +39,9 @@ var yql = (function () {
         */
         url = function () {
             var textAreas = document.getElementsByTagName('textarea');
-            return ('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(textAreas[0] && textAreas[0].value || '') + '&format=json&diagnostics=true&callback=yql.store');
+            return ('http://query.yahooapis.com/v1/public/yql?q=' +
+                    encodeURIComponent(textAreas[0] && textAreas[0].value || '') +
+                    '&format=json&diagnostics=true&callback=yql.store');
         },
 
         /**
@@ -74,7 +78,7 @@ var yql = (function () {
             if (jsonp instanceof Node) jsonp.parentNode.removeChild(jsonp);
             jsonp = null;
             return call_if_func(cb);
-        }
+        },
 
         /**
         * Do a JSONP YQL query (inject a <script> tag, pass data to the global callback)
@@ -88,7 +92,7 @@ var yql = (function () {
             jsonp.setAttribute('src', url());
             document.getElementsByTagName('body')[0].appendChild(jsonp);
             return call_if_func(cb);
-        }
+        },
 
         /**
         * Start the whole process
@@ -199,10 +203,8 @@ var yql = (function () {
             if (repeat) timeout = setTimeout(start, latency);
         };
 
-    window.stored = stored;
-
     // publicly accessible methods
-    return({
+    return ({
         /**
         * Stop the JSONP calls to YQL (and YCombinator)
         * @memberOf yql
