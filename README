@@ -1,4 +1,4 @@
-This a simply OO JS file to allow polling of YCombinator with YQL,
+This a simple OO JS file to allow polling of YCombinator with YQL,
 though it could be easily adapted to polling any YQL statement/
 Google news page for links (I think it's the same XPath?).
 
